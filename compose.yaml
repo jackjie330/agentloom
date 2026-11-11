@@ -1,0 +1,19 @@
+services:
+  postgres:
+    image: postgres:17.7-bookworm
+    environment:
+      POSTGRES_USER: myagents
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?Run node --import tsx scripts/init-env.ts first}
+      POSTGRES_DB: myagents
+    ports:
+      - '127.0.0.1:5432:5432'
+    healthcheck:
+      test: ['CMD-SHELL', 'pg_isready -U myagents -d myagents']
+      interval: 5s
+      timeout: 3s
+      retries: 10
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+
+volumes:
+  postgres-data:
